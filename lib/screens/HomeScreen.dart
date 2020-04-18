@@ -11,6 +11,7 @@ import 'package:bodhiai_teacher_flutter/screens/login.dart';
 import 'package:bodhiai_teacher_flutter/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -62,7 +63,7 @@ class _HomeScreen extends State<HomeScreen> {
             builder: (context) {
               return AlertDialog(
                 content: Container(
-                  height: 200,
+                  height: 500,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -114,7 +115,7 @@ class _HomeScreen extends State<HomeScreen> {
         builder: (context) {
           return AlertDialog(
             content: Container(
-              height: 150,
+              height: 500,
               child: Column(
                 children: <Widget>[
                   Text('Are you sure you want to logout?',
@@ -158,6 +159,7 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+      
     SchedulerBinding.instance.addPostFrameCallback((_) => isUpdateApp(context));
   }
 
@@ -249,13 +251,18 @@ class _HomeScreen extends State<HomeScreen> {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: <Widget>[
+
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async{
+                            SharedPreferences prefs = await preferences;
+                            bool mainteach = prefs.getBool('mainTeacher');
+                            mainteach?
                                   Navigator.push(
                                       context,
                                       Mysilde(
                                           builder: (context) =>
-                                              ManagementScreen(user)));
+                                              ManagementScreen(user))):
+                                              Fluttertoast.showToast(msg: 'Sorry you don\'t have permissions to access this');
                                 },
                                 child: Chip(
                                   avatar: CircleAvatar(
@@ -277,12 +284,16 @@ class _HomeScreen extends State<HomeScreen> {
                                 width: 10,
                               ),
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async{
+                            SharedPreferences prefs = await preferences;
+                            bool mainteach = prefs.getBool('mainTeacher');
+                            mainteach?
                                   Navigator.push(
                                       context,
                                       Mysilde(
                                           builder: (context) =>
-                                              MarketingScreen(user)));
+                                              MarketingScreen(user))):
+                                              Fluttertoast.showToast(msg: 'Sorry you don\'t have permission to access this.');
                                 },
                                 child: Chip(
                                   avatar: CircleAvatar(

@@ -83,7 +83,7 @@ static const aws_platform = const MethodChannel('s3integration');
 
   showConfirmBanner(context,bannerId) async{
     return showDialog(context: context,barrierDismissible: true,builder: (context){
-      return AlertDialog(content: Container(height:100,child: Column(children: <Widget>[
+      return AlertDialog(content: Container(height:500,child: Column(children: <Widget>[
         Text('Are you sure you want to delete this banner?'),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -34,7 +34,7 @@ class _ListAllTests extends State<ListAllTests> {
         builder: (context) {
           return AlertDialog(
             content: Container(
-              height: 200,
+              height: 500,
               child: Column(
                 children: <Widget>[
                   Text('Are you sure you want to delete this test?',

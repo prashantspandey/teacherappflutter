@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:bodhiai_teacher_flutter/data_requests/requests.dart';
 import 'package:bodhiai_teacher_flutter/pojo/basic.dart';
+import 'package:bodhiai_teacher_flutter/screens/ContentScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
@@ -35,14 +37,34 @@ class _UploadNotes extends State<UploadNotes> {
   String chapterText = 'First choose a subject';
   int subjectId;
   int chapterId;
+  var batchValues = [];
 
 
+@override
+initState(){
+  super.initState();
+  getBatch();
+}
+getBatch() async{
+  if (batchValues.length == 0){
+  var response = await getAllBatches(user.key);
+  var batches = response;
+  for(var batch in batches.batches){
+    var batchVal = {'id':batch.id,'name':batch.name,'value':false};
+  setState(() {
+    
+    batchValues.add(batchVal);
+  });    
+  }
+
+  }
+}
 showSubjectDialog(subjects) {
     return showDialog(
         context: context,
         builder: (context) {
           return Container(
-            height: 300,
+            height: 500,
             width: 200,
             child: AlertDialog(
               title: Text('Subjects'),
@@ -88,7 +110,7 @@ showSubjectDialog(subjects) {
         context: context,
         builder: (context) {
           return Container(
-            height: 300,
+            height: 500,
             width: 200,
             child: AlertDialog(
               title: Text('Chapters'),
@@ -131,7 +153,7 @@ showSubjectDialog(subjects) {
 
 showLoadingDialog(context){
   return showDialog(context: context,barrierDismissible: false,builder:(context){
-    return AlertDialog(content: Center(child: CircularProgressIndicator(),),);
+    return AlertDialog(content: Container(height:100,child: Center(child: CircularProgressIndicator(),)),);
   });
 }
   getImage() async {
@@ -159,13 +181,16 @@ showLoadingDialog(context){
       uploadingProgress = false;
     });
     print(imagePath.path.toString());
-    String baseBucketUrl = 'https://instituteimages.s3.amazonaws.com/';
+    String baseBucketUrl = 'https://instituteimages.s3.amazonaws.com';
 
     String title = titleTextController.text;
+  Random random = new Random();
+  int randomNumber = random.nextInt(9999999);
+  String username = user.username;
 
      String path = imagePath.path;
-    //String fileName = imagePath.path.toString().split('/').last.toString();
-    String fileName = path;
+    String fileName = username+'/${randomNumber.toString()}/'+imagePath.path.toString().split('/').last.toString();
+    //String fileName = path;
     try{
       print('uplaod in res');
       //showLoadingDialog(context);
@@ -321,6 +346,18 @@ showLoadingDialog(context){
         padding: const EdgeInsets.all(20.0),
         child: TextField(decoration: InputDecoration(hintText: 'Title of Note'),controller: titleTextController,),
       ),
+        Text('Select Batches ',style: TextStyle(fontSize:15)),
+                   Expanded(
+                                        child: ListView.builder(itemCount:batchValues.length, itemBuilder: (BuildContext context, int index) {
+                      return CheckboxListTile(title:Text(batchValues[index]['name']),value:batchValues[index]['value'] ,
+                      onChanged: (bool value) {
+                        setState(() {
+                          batchValues[index]['value'] = value;
+                        });
+                      },);
+                  },),
+                   ),
+
       Spacer(),
 
           Padding(
@@ -376,19 +413,29 @@ showLoadingDialog(context){
                   }
                   // a list of uploaded url is required by backend api
                   var gg = [pdfUrl];
-
+                  var finalBatches = [];
+                  for (var bat in batchValues){
+                    if(bat['value']==true){
+                      finalBatches.add(bat['id']);
+                    }
+                  }
                   var response = await postUploadNotes(user.key,
-                      titleTextController.text, subjectId, chapterId, gg);
+                      titleTextController.text, subjectId, chapterId, gg,finalBatches);
                   // if call is successfull then page is closed
                   //todo show a dialog box too
                   if (response['status'] == 'Success') {
                     Fluttertoast.showToast(msg: 'Note successfully uploaded.');
                     Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ContentScreen(user)));
+
                   }
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('Select Images',
+                  child: Text('Select Images/PDFs',
                       style: TextStyle(fontSize: 20, color: Colors.white)),
                 ),
               ),

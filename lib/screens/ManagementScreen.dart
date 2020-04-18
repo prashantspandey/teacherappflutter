@@ -1,16 +1,26 @@
 import 'package:bodhiai_teacher_flutter/data_requests/requests.dart';
 import 'package:bodhiai_teacher_flutter/pojo/basic.dart';
+import 'package:bodhiai_teacher_flutter/screens/AddStudents.dart';
 import 'package:bodhiai_teacher_flutter/screens/AttendanceOptions.dart';
 import 'package:bodhiai_teacher_flutter/screens/BatchsListScreen.dart';
 import 'package:bodhiai_teacher_flutter/screens/CreateBatch.dart';
+import 'package:bodhiai_teacher_flutter/screens/CreateCourse.dart';
 import 'package:bodhiai_teacher_flutter/screens/EditBatch.dart';
 import 'package:bodhiai_teacher_flutter/screens/FeesScreen.dart';
+import 'package:bodhiai_teacher_flutter/screens/JoinRequests.dart';
+import 'package:bodhiai_teacher_flutter/screens/SearchStudent.dart';
 import 'package:bodhiai_teacher_flutter/screens/StudentList.dart';
 import 'package:flutter/material.dart';
 
 class ManagementScreen extends StatelessWidget {
   TeacherUser user = TeacherUser();
   ManagementScreen(this.user);
+showLoader(context){
+  return showDialog(context: context,barrierDismissible: false,builder:(context){
+    return AlertDialog(content: Container(height:100,child: Center(child: CircularProgressIndicator(),)),);
+  });
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,17 +97,141 @@ class ManagementScreen extends StatelessWidget {
                               top: MediaQuery.of(context).size.height / 30),
                           child: Divider(height: 20, color: Colors.pink)),
                       onTap: () async {
+                        showLoader(context);
                         ListStudents students = ListStudents();
                         students = await getAllStudents(user.key);
+                        Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => StudentList(
-                                      students,
+                                      students,user
                                     )));
                       },
                     ),
                   ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width / 30,
+                        right: MediaQuery.of(context).size.width / 30),
+                    child: ListTile(
+                      title: Container(
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height / 30),
+                        // color: Colors.pink,
+                        child: Text(
+                          'Search Students',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ),
+                      leading: Container(
+                          // color: Colors.red,
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 100),
+                          height: MediaQuery.of(context).size.height*0.07,
+                          // width: 50,
+                          child: Image(
+                            image: AssetImage("assets/reader.png"),
+                          )),
+                      subtitle: Container(
+                          // color: Colors.red,
+                          margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 30),
+                          child: Divider(height: 20, color: Colors.pink)),
+                      onTap: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchStudent
+                                      (user
+                                    )));
+                      },
+                    ),
+                  ),
+
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width / 30,
+                        right: MediaQuery.of(context).size.width / 30),
+                    child: ListTile(
+                      title: Container(
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height / 30),
+                        // color: Colors.pink,
+                        child: Text(
+                          'Add Student',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ),
+                      leading: Container(
+                          // color: Colors.red,
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 100),
+                          height: MediaQuery.of(context).size.height*0.07,
+                          // width: 50,
+                          child: Image(
+                            image: AssetImage("assets/reader.png"),
+                          )),
+                      subtitle: Container(
+                          // color: Colors.red,
+                          margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 30),
+                          child: Divider(height: 20, color: Colors.pink)),
+                      onTap: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddStudents(
+                                      user,
+                                    )));
+                      },
+                    ),
+                  ),
+
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width / 30,
+                        right: MediaQuery.of(context).size.width / 30),
+                    child: ListTile(
+                      title: Container(
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height / 30),
+                        // color: Colors.pink,
+                        child: Text(
+                          'Join Requests',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ),
+                      leading: Container(
+                          // color: Colors.red,
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 100),
+                          height: MediaQuery.of(context).size.height*0.07,
+                          // width: 50,
+                          child: Image(
+                            image: AssetImage("assets/request.jpeg"),
+                          )),
+                      subtitle: Container(
+                          // color: Colors.red,
+                          margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 30),
+                          child: Divider(height: 20, color: Colors.pink)),
+                      onTap: () async {
+                        // ListStudents students = ListStudents();
+                        // students = await getAllStudents(user.key);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => JoinRequests(
+                                      user,
+                                    )));
+                      },
+                    ),
+                  ),
+
 
                   // Divider(height: 20, color: Colors.blue),
 
@@ -246,6 +380,42 @@ class ManagementScreen extends StatelessWidget {
                       },
                     ),
                   ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width / 30,
+                        right: MediaQuery.of(context).size.width / 30),
+                    child: ListTile(
+                      title: Container(
+                        margin: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height / 30),
+                        child: Text(
+                          'Create Courses',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ),
+                      leading: Container(
+                          // color: Colors.red,
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 100),
+                          height: MediaQuery.of(context).size.height*0.06,
+                          // width: 50,
+                          child: Image(
+                            image: AssetImage("assets/workshop.png"),
+                          )),
+                      subtitle: Container(
+                          // color: Colors.red,
+                          margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 30),
+                          child: Divider(height: 20, color: Colors.pink)),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateCourse(user)));
+                      },
+                    )),
+
                   // Container(
                   //   margin: EdgeInsets.only(
                   //       left: MediaQuery.of(context).size.width / 30,

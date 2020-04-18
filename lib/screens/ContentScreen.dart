@@ -141,45 +141,45 @@ class ContentScreen extends StatelessWidget {
                 ),
               ),
 
-              Container(
-                margin: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width / 30,
-                    right: MediaQuery.of(context).size.width / 30),
-                child: ListTile(
-                  title: Container(
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height / 30),
-                      // color: Colors.pink,
-                      child: Text(
-                        'Upload Videos',
-                        style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      )),
-                  leading: Container(
-                      // color: Colors.red,
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height / 100),
-                      height: 100,
-                      width: 40,
-                      child: Image(
-                        image: AssetImage("assets/upload1.png"),
-                      )),
-                  subtitle: Container(
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 30),
-                    child: Divider(
-                      height: 20,
-                      color: Colors.green,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UploadVideo(user)));
-                  },
-                ),
-              ),
+              // Container(
+                // margin: EdgeInsets.only(
+                    // left: MediaQuery.of(context).size.width / 30,
+                    // right: MediaQuery.of(context).size.width / 30),
+                // child: ListTile(
+                  // title: Container(
+                      // margin: EdgeInsets.only(
+                          // top: MediaQuery.of(context).size.height / 30),
+                      //color: Colors.pink,
+                      // child: Text(
+                        // 'Upload Videos',
+                        // style:
+                            // TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      // )),
+                  // leading: Container(
+                      //color: Colors.red,
+                      // padding: EdgeInsets.only(
+                          // top: MediaQuery.of(context).size.height / 100),
+                      // height: 100,
+                      // width: 40,
+                      // child: Image(
+                        // image: AssetImage("assets/upload1.png"),
+                      // )),
+                  // subtitle: Container(
+                    // margin: EdgeInsets.only(
+                        // top: MediaQuery.of(context).size.height / 30),
+                    // child: Divider(
+                      // height: 20,
+                      // color: Colors.green,
+                    // ),
+                  // ),
+                  // onTap: () {
+                    // Navigator.push(
+                        // context,
+                        // MaterialPageRoute(
+                            // builder: (context) => UploadVideo(user)));
+                  // },
+                // ),
+              // ),
               Container(
                 margin: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width / 30,

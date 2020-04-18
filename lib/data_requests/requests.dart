@@ -17,7 +17,8 @@ Future teacherLogin(username, password) async {
   var data = await http.post(url, body: body, headers: headers);
 
   if (data.statusCode == 200 || data.statusCode == 201) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     teacherUser = TeacherUser.fromJson(response);
     String key = teacherUser.key;
     return teacherUser;
@@ -36,7 +37,8 @@ Future instituteInformation(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   }
 }
@@ -52,7 +54,8 @@ Future getAllBatches(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     batches = ListBatches.fromJson(response);
     return batches;
   } else {
@@ -72,7 +75,8 @@ Future getAllStudents(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     students = ListStudents.fromJson(response);
     return students;
   } else {
@@ -93,7 +97,8 @@ Future getBatchStudents(key, batchId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     students = ListStudents.fromJson(response);
         return students;
   } else {
@@ -113,7 +118,8 @@ Future getListAttendanceDateWise(key, batchId, date) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -134,7 +140,8 @@ Future submitAttendance(key, date, attendance) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -157,7 +164,8 @@ Future getAlreadyAttendance(key, date, studentList) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -176,7 +184,8 @@ Future getAllSubjects(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     print('subject ${response.toString()}');
     return response;
   } else {
@@ -196,7 +205,8 @@ Future getSubjectChapters(key, subject) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -222,7 +232,8 @@ Future postUploadVideo(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -240,7 +251,8 @@ Future getUploadedVideos(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -248,7 +260,7 @@ Future getUploadedVideos(key) async {
   }
 }
 
-Future postUploadNotes(key, title, subject, chapter, details) async {
+Future postUploadNotes(key, title, subject, chapter, details,batches) async {
   var headers = {
     'Authorization': 'token $key',
     'Accept': 'application/json',
@@ -259,12 +271,15 @@ Future postUploadNotes(key, title, subject, chapter, details) async {
     'chapter_id': jsonEncode(chapter),
     'title': title,
     'note_details': jsonEncode(details),
+    'batches_ids': jsonEncode(batches)    
+
   };
   String url = 'http://15.206.150.90/api/content/teacher_upload_notes/';
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -282,7 +297,8 @@ Future getUploadedNotes(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -300,7 +316,8 @@ Future getUploadedTests(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -318,7 +335,8 @@ Future getCreatedPackages(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -342,7 +360,8 @@ Future createPackage(key, title, price, duration) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -364,7 +383,8 @@ Future getIndividualPackage(key, packageId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -386,7 +406,8 @@ Future packageAddVideo(key, videosIds, packageId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -408,7 +429,8 @@ Future packageAddNote(key, noteIds, packageId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -430,7 +452,8 @@ Future packageAddTest(key, testIds, packageId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -452,7 +475,8 @@ Future packageRemoveVideo(key, videoId, packageId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -474,7 +498,8 @@ Future packageRemoveNote(key, noteId, packageId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -496,7 +521,8 @@ Future packageRemoveTest(key, testId, packageId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -518,7 +544,8 @@ Future getChaperQuestions(key, chapterId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -541,7 +568,8 @@ Future teacherCreateTest(key, questionsIds, batches, time) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -563,7 +591,8 @@ Future teacherCreateBatch(key, batchName) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -586,7 +615,8 @@ Future teacherAddStudentsBatch(key, batchId, studentIds) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -610,7 +640,8 @@ Future teacherCreateFees(key, studentId, totalFees, paidFees, date) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -628,7 +659,8 @@ Future teacherGetAllFees(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -650,7 +682,8 @@ Future getIndividualFeeDetails(key, feeId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -673,7 +706,8 @@ Future feesAddPayment(key, feeId, payment, date) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -698,7 +732,8 @@ Future feesDeletePayment(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -716,7 +751,8 @@ Future getAllCreatedTests(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode);
@@ -741,7 +777,8 @@ Future getIndividualTestDetails(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -758,7 +795,8 @@ Future getAllBanners(key) async {
   var data = await http.get(url, headers: headers);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode);
@@ -783,7 +821,8 @@ Future uploadBanner(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -806,7 +845,8 @@ Future publishLiveVideoLink(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -830,7 +870,8 @@ Future sendNotification(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -854,7 +895,8 @@ Future startNativeLiveVideo(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -877,7 +919,8 @@ Future stopNativeLiveVideo(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -888,7 +931,8 @@ Future uploadYoutubeVideoServer(
   key,
   urlVideo,
   chapterId,
-  title
+  title,
+  batches
 ) async {
   var headers = {
     'Authorization': 'token $key',
@@ -899,12 +943,14 @@ Future uploadYoutubeVideoServer(
     'url': jsonEncode(urlVideo),
     'chapter_id': jsonEncode(chapterId),
     'title': jsonEncode(title),
+    'batches_ids': jsonEncode(batches),
   };
   String url = 'http://15.206.150.90/api/content/teacher_add_youtube_video/';
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -927,7 +973,8 @@ Future getLiveVideoMessages(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -950,7 +997,8 @@ Future postDeleteBanner(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -973,7 +1021,8 @@ Future postDeleteVideo(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -996,7 +1045,8 @@ Future postDeleteNote(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -1021,7 +1071,8 @@ Future sendAnnouncement(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -1044,7 +1095,8 @@ Future deleteBatch(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     return response;
   } else {
     print(data.statusCode.toString());
@@ -1064,7 +1116,8 @@ Future postAddSubject(key, subjectName) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     print('add subject ${response.toString()}');
     return response;
   } else {
@@ -1086,7 +1139,8 @@ Future checkUpdate(key, version) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     print('app version ${response.toString()}');
     return response;
   } else {
@@ -1111,7 +1165,8 @@ Future getNumberLiveStudents(
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     print('live numbers ${response.toString()}');
     return response;
   } else {
@@ -1133,7 +1188,8 @@ Future postDeleteSubject(key, subjectId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     print('delete subject ${response.toString()}');
     return response;
   } else {
@@ -1155,8 +1211,450 @@ Future postDeleteTests(key, testId) async {
   var data = await http.post(url, headers: headers, body: body);
 
   if (data.statusCode == 200) {
-    var response = json.decode(data.body);
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
     print('delete test ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future getJoinRequests(key) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+
+  String url =
+      'http://15.206.150.90/api/basicinformation/teacher_get_join_requests/';
+  var data = await http.get(url, headers: headers);
+
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('join requests ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+
+Future acceptJoinRequest(key, requestId,batches) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'batches': jsonEncode(batches),
+    'request_id': jsonEncode(requestId)
+  };
+  String url =
+      'http://15.206.150.90/api/basicinformation/teacher_accept_join_request/';
+  var data = await http.post(url, headers: headers, body: body);
+
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('delete test ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future teacherRegisterStudent(key, username,name,batches) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {'username': username.toString().replaceAll("\"", ""),'name':name.toString(),'batches':jsonEncode(batches)};
+  String url =
+      'http://15.206.150.90/api/membership/teacher_student_register/';
+  var data = await http.post(url, headers: headers, body: body);
+if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('register  student ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+
+}
+
+Future studentProfile(key, studentId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {'student_id': studentId.toString()};
+  String url =
+      'http://15.206.150.90/api/basicinformation/teacher_individual_student_profile/';
+  var data = await http.post(url, headers: headers, body: body);
+if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('student profile ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+
+}
+
+Future removeStudentBatch(key, studentId,batchId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {'student_id': studentId.toString(),
+    'batch_id' : batchId.toString(),
+  };
+  String url =
+      'http://15.206.150.90/api/basicinformation/teacher_remove_student_batch/';
+  var data = await http.post(url, headers: headers, body: body);
+if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('remove student batch ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+
+}
+Future deleteStudent(key, studentId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {'student_id': studentId.toString(),
+  };
+  String url =
+      'http://15.206.150.90/api/basicinformation/teacher_delete_student/';
+  var data = await http.post(url, headers: headers, body: body);
+if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('delete student  ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+
+}
+Future searchStudentsPhoneNumber(key,phoneNumber) async {
+  ListStudents students = ListStudents();
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'user_name':phoneNumber,
+  };
+  String url =
+      'http://15.206.150.90/api/basicinformation/teacher_search_student/';
+  var data = await http.post(url, headers: headers,body: body);
+
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    students = ListStudents.fromJson(response);
+    return students;
+  } else {
+    return students;
+  }
+}
+
+Future addBatchStudent(key,studentId,batches) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'batches':jsonEncode(batches),
+    'student_id':jsonEncode(studentId)
+  };
+  String url =
+      'http://15.206.150.90/api/basicinformation/teacher_batch_student_add/';
+  var data = await http.post(url, headers: headers,body: body);
+
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    return response;
+  } else {
+    return data.statusCode;
+  }
+}
+
+Future postDeleteChapter(key, chapterId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'chapter_id': jsonEncode(chapterId),
+  };
+  String url =
+      'http://15.206.150.90/api/basicinformation/teacher_delete_chapter/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('delete chapter ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+
+Future postAddChapters(key, chapterid, chapterName) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'chapter_name': chapterName,
+    'subject_id': jsonEncode(chapterid),
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_add_chapter/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('add chapter ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+
+Future getAllCourses(key) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_get_courses/';
+  var data = await http.post(url, headers: headers);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('get courses ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+
+Future courseGetSubjects(key, courseId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'course_id': jsonEncode(courseId),
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_course_subjects/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('course subjects ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future courseGetBatches(key, courseId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'course_id': jsonEncode(courseId),
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_course_batches/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('course subjects ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future courseCreate(key, courseName) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'course_name': courseName,
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_create_course/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('course create ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future deleteCourse(key, courseId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'course_id': jsonEncode(courseId),
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_delete_course/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('course delete ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+
+Future removeBatchCourse(key, courseId,batchId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'course_id': jsonEncode(courseId),
+    'batch_id': jsonEncode(batchId),
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_course_remove_batches/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('batch remove ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future removeSubjectCourse(key, courseId,subjectId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'subject_id': jsonEncode(subjectId),
+    'course_id': jsonEncode(courseId),
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_course_remove_subjects/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('subject remove ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future courseAddBatches(key,courseId, batches) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'batch_ids': jsonEncode(batches),
+    'course_id': jsonEncode(courseId),
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_add_batch_course/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('course add batch ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future courseAddSubjects(key,courseId, subjects) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'subject_ids': jsonEncode(subjects),
+    'course_id': jsonEncode(courseId),
+  };
+  String url = 'http://15.206.150.90/api/content/teacher_add_subject_course/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('course add subject ${response.toString()}');
+    return response;
+  } else {
+    print(data.statusCode.toString());
+    return data.body;
+  }
+}
+Future liveVideoStudents(key,videoId) async {
+  var headers = {
+    'Authorization': 'token $key',
+    'Accept': 'application/json',
+    "Content-Type": 'application/x-www-form-urlencoded'
+  };
+  var body = {
+    'video_id': jsonEncode(videoId),
+  };
+  String url = 'http://15.206.150.90/api/basicinformation/teacher_get_live_students/';
+  var data = await http.post(url, headers: headers, body: body);
+  if (data.statusCode == 200) {
+    var utfDecode = utf8.decode(data.bodyBytes);
+    var response = json.decode(utfDecode);
+    print('live students info ${response.toString()}');
     return response;
   } else {
     print(data.statusCode.toString());

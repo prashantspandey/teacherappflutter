@@ -33,6 +33,13 @@ class _CallPageState extends State<CallPage> {
   int totalStudents = 0;
   List<String> messages = [];
   ScrollController _scrollController = ScrollController();
+
+showLoader(context){
+  return showDialog(context: context,barrierDismissible: false,builder:(context){
+    return AlertDialog(content: Container(height:100,child: Center(child: CircularProgressIndicator(),)),);
+  });
+}
+
   exitDialog(context) {
     showDialog(
         context: context,
@@ -47,7 +54,7 @@ class _CallPageState extends State<CallPage> {
                   'End Video',
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () async {
+                onPressed: ()  {
                   _onCallEnd(context);
                 },
               ),
@@ -64,6 +71,12 @@ class _CallPageState extends State<CallPage> {
             ],
           );
         });
+  }
+
+  getLiveStudentInformation() async{
+    var response = await liveVideoStudents(widget.user.key,widget.videoId);
+    var students = response['students'];
+    return students;
   }
 
   getTotalStudents() async {
@@ -152,7 +165,7 @@ class _CallPageState extends State<CallPage> {
       VideoEncoderConfiguration config = VideoEncoderConfiguration();
       config.degradationPreference = DegradationPreference.MaintainFramerate;
       config.dimensions = Size(848, 480);
-      config.frameRate = 30;
+      config.frameRate = 15;
       config.orientationMode = VideoOutputOrientationMode.Adaptative;
       config.bitrate = 1900;
       return config;
@@ -318,7 +331,7 @@ class _CallPageState extends State<CallPage> {
 
   Widget _totalStudents() {
     return Align(
-      alignment: Alignment.topRight,
+      alignment: Alignment.bottomRight,
       child: Padding(
         padding: const EdgeInsets.all(50.0),
         child: Container(
@@ -337,9 +350,9 @@ class _CallPageState extends State<CallPage> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 130.0),
+        padding: const EdgeInsets.only(bottom: 130.0,top:50),
         child: Container(
-          height: 100,
+          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: ListView.builder(
             itemCount: messages.length,
@@ -484,15 +497,11 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
-  void _onCallEnd(BuildContext context) async {
-    var response = await stopNativeLiveVideo(widget.user.key, widget.videoId);
+  void _onCallEnd(BuildContext context)  {
+    stopNativeLiveVideo(widget.user.key, widget.videoId);
     timer.cancel();
-    if (response['status'] == 'Success') {
-      Navigator.pop(context);
-    } else {
-      Navigator.pop(context);
-      Fluttertoast.showToast(msg: response['message']);
-    }
+    Navigator.pop(context);
+    dispose();
   }
 
   void _onToggleMute() {
@@ -518,7 +527,14 @@ class _CallPageState extends State<CallPage> {
               _panel(),
               _toolbar(),
               _liveMessages(),
-              _totalStudents(),
+              GestureDetector(child: _totalStudents(),
+              onTap: ()async{
+                showLoader(context);
+                  var students = await getLiveStudentInformation();
+                  Navigator.pop(context);
+                showAllStudentsDialog(context,students);
+              }, 
+              ),
             ],
           ),
         ),
@@ -527,5 +543,39 @@ class _CallPageState extends State<CallPage> {
         return exitDialog(context);
       },
     );
+  }
+
+   showAllStudentsDialog(BuildContext context,students) {
+     return showDialog(context: context,builder: (context){
+                return AlertDialog(content:Container(
+                  height: 400,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                  child: ListView.builder(itemCount:students.length, itemBuilder: (BuildContext context, int index) {
+                    if(students.length != 0){
+                      var date = students[index]['joinTime'].toString().split('T')[0].toString();
+                      var time = students[index]['joinTime'].toString().split('T')[1].toString();
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(title: Text(students[index]['student']),
+                      leading: Image.asset('assets/user.png',height: 30,), 
+                      subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                    Text(students[index]['username']),
+                    Text(date),
+                    Text('Join Time: '+time.split(':').sublist(0,2).toString()),
+                    Divider(color: Colors.orangeAccent,)
+                      ],),
+                      ),
+                  );
+
+                    }
+                    else{
+                      return Center(child: Text('No information available.'));
+                    }
+                    },),
+                ));
+              });
   }
 }

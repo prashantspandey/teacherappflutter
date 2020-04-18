@@ -28,7 +28,7 @@ class _NativeLiveVideo extends State<NativeLiveVideo> {
         builder: (context) {
           return AlertDialog(
             content: Container(
-              height: 200,
+              height: 500,
               child: Center(
                 child: CircularProgressIndicator(),
               ),
@@ -208,10 +208,10 @@ class _NativeLiveVideo extends State<NativeLiveVideo> {
                   'Highest',
                   style: new TextStyle(fontSize: 16.0),
                 ),
-
+// 
                   ],
                 ),
-
+// 
               ],
             ),
             Visibility(

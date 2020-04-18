@@ -35,7 +35,7 @@ class _TestQuestionsScreen extends State<TestQuestionsScreen> {
         context: context,
         builder: (context) {
           return Container(
-            height: 300,
+            height: 500,
             width: 200,
             child: AlertDialog(
               title: Text('Subjects'),
@@ -81,7 +81,7 @@ class _TestQuestionsScreen extends State<TestQuestionsScreen> {
         context: context,
         builder: (context) {
           return Container(
-            height: 300,
+            height: 500,
             width: 200,
             child: AlertDialog(
               title: Text('Chapters'),
@@ -142,6 +142,22 @@ class _TestQuestionsScreen extends State<TestQuestionsScreen> {
       return true;
     }
   }
+  isQuestionDirectionPicture(picture) {
+    if (picture == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  isQuestionDirectionText(text) {
+    if (text == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+
 
   isQuestionInPaper(questionId) {
     if (seletedQuestionsList.contains(questionId)) {
@@ -244,6 +260,7 @@ class _TestQuestionsScreen extends State<TestQuestionsScreen> {
                             child: ListView.builder(
                               itemCount: questions.length,
                               itemBuilder: (context, index) {
+                                print(questions[index]['direction']['picture']);
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
@@ -290,6 +307,24 @@ class _TestQuestionsScreen extends State<TestQuestionsScreen> {
                                             ],
                                           ),
                                         ),
+                                        isQuestionDirectionText(questions[index]['direction']['text'])
+                                            ? Text(questions[index]['direction']['text'].toString())
+                                            : Container(
+                                                height: 0,
+                                              ),
+                                        isQuestionDirectionPicture(
+                                                questions[index]['direction']['picture'])
+                                            ? CachedNetworkImage(
+                                                imageUrl: questions[index]['direction']
+                                                    ['picture'],
+                                                placeholder: (context, url) {
+                                                  return CircularProgressIndicator();
+                                                },
+                                              )
+                                            : Container(
+                                                height: 0,
+                                              ),
+
                                         isQuestionText(questions[index]['text'])
                                             ? Text(questions[index]['text'])
                                             : Container(

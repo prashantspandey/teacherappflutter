@@ -37,6 +37,12 @@ class BatchListScreen extends StatelessWidget {
       return false;
     }
   }
+showLoader(context){
+  return showDialog(context: context,barrierDismissible: false,builder:(context){
+    return AlertDialog(content: Container(height:100,child: Center(child: CircularProgressIndicator(),)),);
+  });
+}
+
 
   redirectMarkAttendance(context, students) {
     Navigator.push(
@@ -55,7 +61,7 @@ class BatchListScreen extends StatelessWidget {
   }
   showDeleteDialog(context,batchId){
     return showDialog(context: context,barrierDismissible: false,builder:(context){
-      return AlertDialog(content: Container(height: 100,child: Column(children: <Widget>[
+      return AlertDialog(content: Container(height: 500,child: Column(children: <Widget>[
         Text('Are you sure you want to delete this batch?',style: TextStyle(fontSize:20)),
         Spacer(),
         Row(
@@ -99,7 +105,33 @@ class BatchListScreen extends StatelessWidget {
                         child: Image(
                           image: AssetImage("assets/class1.png"),
                         )),
-                onTap: () async {
+                        subtitle: Column(children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                            RaisedButton(child: Text('Student List'), onPressed: () async{
+                        showLoader(context);
+                        ListStudents students = ListStudents();
+                        students = await getBatchStudents(user.key,batchList.batches[index].id);
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => StudentList(
+                                      students,user
+                                    )));
+
+
+
+                            },),
+                            Text('|'),
+                            RaisedButton(child: Text('Subjects'), onPressed: () {},)
+                          ],),
+                          Divider(color: Colors.orange),
+                        ],),
+
+
+                onLongPress: () async {
                   if (screenName != null) {
                     print(
                         'batch clicked ${batchList.batches[index].name.toString()}');

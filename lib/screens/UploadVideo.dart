@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:math';
 import 'package:bodhiai_teacher_flutter/pojo/basic.dart';
 import 'package:flutter/material.dart';
 import 'package:bodhiai_teacher_flutter/data_requests/requests.dart';
@@ -157,8 +157,6 @@ class _UploadVideo extends State<UploadVideo> {
       // uploadingProgress = false;
     // });
     print(imagePath.path.toString());
-
-
 
     String title = titleTextController.text;
     String path = imagePath.path;

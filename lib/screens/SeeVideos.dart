@@ -24,7 +24,7 @@ class _SeeVideos extends State<SeeVideos> {
   _SeeVideos(this.user, this.videos);
   showDeleteDialog(context,videoId){
     return showDialog(context: context,barrierDismissible: false,builder:(context){
-      return AlertDialog(content: Container(height: 100,child: Column(children: <Widget>[
+      return AlertDialog(content: Container(height: 500,child: Column(children: <Widget>[
         Text('Are you sure you want to delete this video?',style: TextStyle(fontSize:20)),
         Spacer(),
         Row(

@@ -18,6 +18,13 @@ class _CreateBatch extends State<CreateBatch> {
   TeacherUser user = TeacherUser();
   TextEditingController batchNameController = TextEditingController();
   _CreateBatch(this.user);
+showLoader(context){
+  return showDialog(context: context,barrierDismissible: false,builder:(context){
+    return AlertDialog(content: Container(height:100,child: Center(child: CircularProgressIndicator(),)),);
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +78,9 @@ class _CreateBatch extends State<CreateBatch> {
                                 ],
                               ),
                               onTap: () async {
+                                showLoader(context);
                                 var students = await getAllStudents(user.key);
+                                Navigator.pop(context);
                                 showDialog(
                                     context: context,
                                     builder: (context) {
@@ -175,6 +184,13 @@ class _AddStudentBatch extends State<AddStudentBatch> {
         placeholder: (context, url) => CircularProgressIndicator(),
         errorWidget: (context, url, error) => Image.asset('assets/user.png'),
      ), 
+     subtitle: Container(
+       height: 50,
+       width: 30,
+            child: ListView.builder(itemCount:students[index].batches.length, itemBuilder: (BuildContext context, int batchindex) {
+         return Text(students[index].batches[batchindex].name);
+       },),
+     ),
 
                       trailing: Checkbox(
                         value: studentValues[students[index].id],

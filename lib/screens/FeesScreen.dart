@@ -24,7 +24,7 @@ class _FeesScreen extends State<FeesScreen> {
         context: context,
         builder: (context) {
           return Container(
-            height: 300,
+            height: 500,
             width: 200,
             child: AlertDialog(
               title: Text('Students'),
@@ -97,7 +97,7 @@ class _FeesScreen extends State<FeesScreen> {
         context: context,
         builder: (context) {
           return Container(
-            height: 300,
+            height: 500,
             width: 200,
             child: AlertDialog(
               title: Text('Fees Details'),

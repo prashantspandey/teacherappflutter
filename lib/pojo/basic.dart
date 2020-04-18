@@ -3,20 +3,23 @@ class TeacherUser {
   String username;
   String name;
   String institute;
+  bool mainTeacher;
 
-  TeacherUser({this.key, this.username, this.name, this.institute});
+  TeacherUser({this.key, this.username, this.name, this.institute,this.mainTeacher});
   factory TeacherUser.fromJson(Map<String, dynamic> json) {
     return TeacherUser(
         key: json['key'],
         institute: json['institute'],
         username: json['username'],
-        name: json['name']);
+        name: json['name'],
+        mainTeacher: json['mainTeacher']);
   }
   Map<String, dynamic> toJson() => {
         'key': key,
         'username': username,
         'name': name,
         'institute': institute,
+        'mainTeacher': mainTeacher,
       };
 }
 

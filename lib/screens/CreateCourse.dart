@@ -1,22 +1,22 @@
-import 'package:bodhiai_teacher_flutter/data_requests/requests.dart';
 import 'package:bodhiai_teacher_flutter/pojo/basic.dart';
-import 'package:bodhiai_teacher_flutter/screens/ChapterScreen.dart';
+import 'package:bodhiai_teacher_flutter/data_requests/requests.dart';
+import 'package:bodhiai_teacher_flutter/screens/EditCourses.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class AddSubjects extends StatefulWidget {
-  TeacherUser user = TeacherUser();
-  AddSubjects(this.user);
+
+class CreateCourse extends StatefulWidget {
+  TeacherUser user  = TeacherUser();
+  CreateCourse(this.user);
   @override
-  State<StatefulWidget> createState() {
-    return _AddSubjects();
-  }
+  _CreateCourseState createState() => _CreateCourseState();
 }
 
-class _AddSubjects extends State<AddSubjects> {
-  TextEditingController subjectName = TextEditingController();
-  bool cancel;
-  showDeleteDialog(context, subjectId) {
+class _CreateCourseState extends State<CreateCourse> {
+  TextEditingController courseName = TextEditingController();
+  bool cancel = false;
+
+  showDeleteDialog(context, courseId) {
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -26,7 +26,7 @@ class _AddSubjects extends State<AddSubjects> {
               height: 500,
               child: Column(
                 children: <Widget>[
-                  Text('Are you sure you want to delete this subject?',
+                  Text('Are you sure you want to delete this course?',
                       style: TextStyle(fontSize: 20)),
                   Spacer(),
                   Row(
@@ -37,8 +37,8 @@ class _AddSubjects extends State<AddSubjects> {
                         child: Text('Delete',
                             style: TextStyle(color: Colors.white)),
                         onPressed: () async {
-                          var response = await postDeleteSubject(
-                              widget.user.key, subjectId);
+                          var response = await deleteCourse(
+                              widget.user.key, courseId);
                           Fluttertoast.showToast(msg: response['message']);
                           Navigator.pop(context);
                         },
@@ -63,35 +63,32 @@ class _AddSubjects extends State<AddSubjects> {
         });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add Subjects'),
-        backgroundColor: Colors.orangeAccent,
-      ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Padding(
+      appBar: AppBar(title: Text('Create Course'),backgroundColor: Colors.pink,),
+      body: Container(child: Column(children: <Widget>[
+                      Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: subjectName,
-                decoration: InputDecoration(hintText: 'Subject Name'),
+                controller: courseName,
+                decoration: InputDecoration(hintText: 'Course Name'),
               ),
             ),
             Expanded(
               child: FutureBuilder(
-                future: getAllSubjects(widget.user.key),
+                future: getAllCourses(widget.user.key),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.data != null) {
-                    var subjects = snapshot.data['subjects'];
+                    var courses = snapshot.data['courses'];
                     return ListView.builder(
-                      itemCount: subjects.length,
+                      itemCount: courses.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           title: Text(
-                            subjects[index]['name'],
+                            courses[index]['name'],
                             style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold),
                           ),
@@ -103,11 +100,11 @@ class _AddSubjects extends State<AddSubjects> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ChaptersScreen(widget.user,subjects[index]['id'])));
+                            builder: (context) => EditCourse(widget.user,courses[index]['id'])));
 
                           },
                           onLongPress: () async {
-                            showDeleteDialog(context, subjects[index]['id'])
+                            showDeleteDialog(context, courses[index]['id'])
                                 .then((_) => setState(() {}));
 
                             // getAllSubjects(widget.user.key);
@@ -129,16 +126,16 @@ class _AddSubjects extends State<AddSubjects> {
                 minWidth: MediaQuery.of(context).size.width - 50,
                 child: RaisedButton(
                   color: Colors.black,
-                  child: Text('Add Subject',
+                  child: Text('Add Course',
                       style: TextStyle(
                         color: Colors.white,
                       )),
                   onPressed: () async {
-                    if (subjectName.text == null || subjectName.text == '') {
-                      Fluttertoast.showToast(msg: "Please enter subject name.");
+                    if (courseName.text == null || courseName.text == '') {
+                      Fluttertoast.showToast(msg: "Please enter course name.");
                     } else {
-                      var response = await postAddSubject(
-                          widget.user.key, subjectName.text);
+                      var response = await courseCreate(
+                          widget.user.key, courseName.text);
                       if (response['status'] == 'Success') {
                         Fluttertoast.showToast(msg: response['message'])
                             .then((_) => setState(() {}));
@@ -152,9 +149,8 @@ class _AddSubjects extends State<AddSubjects> {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
+
+      ],),), 
     );
   }
 }

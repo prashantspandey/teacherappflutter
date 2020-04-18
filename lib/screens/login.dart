@@ -13,7 +13,7 @@ class Login extends StatelessWidget {
 
  showLoader(context){
    return showDialog(context: context,barrierDismissible: false,builder: (context){
-     return AlertDialog(content: Container(height: 100,color: Colors.transparent,child: Center(child: CircularProgressIndicator()),));
+     return AlertDialog(content: Container(height: 500,color: Colors.transparent,child: Center(child: CircularProgressIndicator()),));
    });
  }
   @override
@@ -125,6 +125,7 @@ class Login extends StatelessWidget {
                            prefs.setString('institute',teacheruser.institute);
                            prefs.setString('username',teacheruser.username);
                           prefs.setString('name',teacheruser.name);
+                          prefs.setBool('mainTeacher',teacheruser.mainTeacher);
                         Navigator.pop(context);
                         Navigator.pushReplacement(
                             context,

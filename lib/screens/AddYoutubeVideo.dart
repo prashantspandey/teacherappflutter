@@ -22,21 +22,43 @@ class _AddYoutubeVideo extends State<AddYoutubeVideo>{
   int chapterId;
   String subjectText = 'Choose a subject';
   String chapterText = 'First choose a subject';
-  bool callQuestions = false;
-  List seletedQuestionsList = [];
-  int selected = 0;
-  double totalMarks = 0;
+//  bool callQuestions = false;
+ // List seletedQuestionsList = [];
+  //int selected = 0;
+  //double totalMarks = 0;
   Color selectedColor = Colors.white;
   List finalQuestionsList = [];
   TeacherUser user = TeacherUser();
   _AddYoutubeVideo(this.user);
+  var batchValues = [];
+
+
+getBatch() async{
+  if (batchValues.length == 0){
+  var response = await getAllBatches(user.key);
+  var batches = response;
+  for(var batch in batches.batches){
+    var batchVal = {'id':batch.id,'name':batch.name,'value':false};
+  setState(() {
+    
+    batchValues.add(batchVal);
+  });    
+  }
+
+  }
+}
+@override
+initState(){
+  super.initState();
+  getBatch();
+}
 
   showSubjectDialog(subjects) {
     return showDialog(
         context: context,
         builder: (context) {
           return Container(
-            height: 300,
+            height: 500,
             width: 200,
             child: AlertDialog(
               title: Text('Subjects'),
@@ -121,9 +143,9 @@ class _AddYoutubeVideo extends State<AddYoutubeVideo>{
           );
         });
   }
-  uploadYoutubeVideo(link,chapterId,title) async{
+  uploadYoutubeVideo(link,chapterId,title,batches) async{
     
-    var response = await uploadYoutubeVideoServer(widget.user.key, link,chapterId,title);
+    var response = await uploadYoutubeVideoServer(widget.user.key, link,chapterId,title,batches);
     return response;
   }
   @override
@@ -178,14 +200,42 @@ class _AddYoutubeVideo extends State<AddYoutubeVideo>{
               ),
             ),
  
-      TextField(decoration: InputDecoration(hintText: 'Title of Video'),controller: titleController,),
-      TextField(decoration: InputDecoration(hintText: 'Youtube Video Link'),controller: urlController,),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(decoration: InputDecoration(hintText: 'Title of Video'),controller: titleController,),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(decoration: InputDecoration(hintText: 'Youtube Video Link'),controller: urlController,),
+      ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Select Batches ',style: TextStyle(fontSize:15,fontWeight: FontWeight.bold)),
+        ),
+                   Expanded(
+                                        child: ListView.builder(itemCount:batchValues.length, itemBuilder: (BuildContext context, int index) {
+                      return CheckboxListTile(title:Text(batchValues[index]['name']),value:batchValues[index]['value'] ,
+                      onChanged: (bool value) {
+                        setState(() {
+                          batchValues[index]['value'] = value;
+                        });
+                      },);
+                  },),
+                   ),
+
+
       ButtonTheme(minWidth: MediaQuery.of(context).size.width,child: RaisedButton(child: Text('Upload Video'), onPressed: () async{
-        if(urlController.text == null || urlController.text == '' || titleController.text == null || titleController.text == ''){
-          Fluttertoast.showToast(msg: 'Please enter title and url ');
+        var finalBatches = [];
+        for(var bat in batchValues){
+          if (bat['value']==true){
+            finalBatches.add(bat['id']);
+          }
+        }
+        if(urlController.text == null || urlController.text == '' || titleController.text == null || titleController.text == ''|| finalBatches.length==0){
+          Fluttertoast.showToast(msg: 'Make sure you have entered tile ,url and batch');
         }
         else{
-         var response = await uploadYoutubeVideo(urlController.text,chapterId,titleController.text);
+         var response = await uploadYoutubeVideo(urlController.text,chapterId,titleController.text,finalBatches);
          if(response['status']=='Success'){
            Fluttertoast.showToast(msg: response['message']);
            Navigator.pop(context);

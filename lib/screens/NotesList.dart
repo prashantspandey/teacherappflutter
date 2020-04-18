@@ -18,7 +18,7 @@ class NotesList extends StatelessWidget {
 
   showDeleteDialog(context,noteId){
     return showDialog(context: context,barrierDismissible: false,builder:(context){
-      return AlertDialog(content: Container(height: 200,child: Column(children: <Widget>[
+      return AlertDialog(content: Container(height: 500,child: Column(children: <Widget>[
         Text('Are you sure you want to delete this note?',style: TextStyle(fontSize:20)),
         Spacer(),
         Row(
